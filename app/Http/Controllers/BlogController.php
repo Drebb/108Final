@@ -137,8 +137,6 @@ class BlogController extends Controller
 
     public function destroy(Blog $blog)
     {
-        $user = Auth::user();
-        DB::statement('SET myapp.user_id = ' . $user->user_id);
         $blog->delete();
 
         return redirect()->route('blogs.index');
