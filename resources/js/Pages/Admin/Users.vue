@@ -50,6 +50,12 @@
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+                    <!-- Search Bar -->
+                    <div class="mb-4">
+                        <input v-model="searchQuery" @input="searchUsers" type="text" placeholder="Search users..."
+                            class="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+                    </div>
+
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr>
@@ -68,7 +74,7 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-for="user in users" :key="user.id">
+                            <tr v-for="user in filteredUsers" :key="user.id">
                                 <td class="px-6 py-4 whitespace-nowrap">{{ user.name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ user.email }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -76,8 +82,7 @@
                                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                         <option v-for="role in roles" :key="role.role_id" :value="role.role_id">{{
                                             role.role_name
-                                            }}
-                                        </option>
+                                            }}</option>
                                     </select>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -104,6 +109,15 @@ export default defineComponent({
         AppLayout,
     },
     props: ['users', 'roles'],
+    data() {
+        return {
+            searchQuery: '',
+            filteredUsers: []
+        }
+    },
+    mounted() {
+        this.filteredUsers = this.users
+    },
     methods: {
         updateUser(user) {
             this.$inertia.put(route('admin.update-user', user.user_id), {
@@ -116,6 +130,16 @@ export default defineComponent({
                 this.$inertia.delete(route('admin.delete-user', user.user_id))
             }
         },
+        searchUsers() {
+            if (this.searchQuery === '') {
+                this.filteredUsers = this.users
+            } else {
+                this.filteredUsers = this.users.filter(user =>
+                    user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                    user.email.toLowerCase().includes(this.searchQuery.toLowerCase())
+                )
+            }
+        }
     },
 })
 </script>

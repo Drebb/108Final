@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Mews\Purifier\Purifier;
 
 class BlogController extends Controller
 {
@@ -65,13 +66,15 @@ class BlogController extends Controller
             'category_id' => 'required|exists:categories,category_id',
         ]);
 
+        $title = strip_tags($request->title);
+        $content = strip_tags($request->content);
+
         $blog = Blog::create([
-            'title' => $request->title,
-            'content' => $request->content,
+            'title' => $title,
+            'content' => $content,
             'user_id' => Auth::id(),
         ]);
 
-        // Attach the blog to the selected category
         $blog->categories()->attach($request->category_id);
 
         return redirect()->route('blogs.index');
@@ -79,7 +82,6 @@ class BlogController extends Controller
 
     public function show(Blog $blog)
     {
-        // Eager load the categories and the user
         $blog->load('user', 'categories');
 
         return Inertia::render('Blogs/Show', ['blog' => $blog]);
@@ -87,48 +89,39 @@ class BlogController extends Controller
 
     public function edit(Blog $blog)
     {
-        // Retrieve all available categories
         $categories = Category::all();
 
-
-        // Load the categories relationship for the blog
-        $blog->load('categories');  // Ensure that the associated categories are loaded
+        $blog->load('categories');
 
 
-        // Return to the edit view with the blog and categories
         return Inertia::render('Blogs/Edit', [
-            'blog' => $blog,  // Pass the blog with its categories
-            'categories' => $categories,  // Pass all categories for the dropdown
+            'blog' => $blog,
+            'categories' => $categories,
         ]);
     }
 
     public function update(Request $request, Blog $blog)
     {
 
-        $before = DB::select("SELECT current_user, session_user");
-
-
-
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'category_id' => 'required|exists:categories,category_id', // Ensure valid category_id
+            'category_id' => 'required|exists:categories,category_id',
+        ]);
+
+        $title = strip_tags($request->title);
+        $content = strip_tags($request->content);
+
+
+        DB::table('blogs')->where('blog_id', $blog->blog_id)->update([
+            'title' => $title,
+            'content' => $content,
         ]);
 
 
-        $blog->update([
-            'title' => $request->title,
-            'content' => $request->content,
+        DB::table('blog_category')->where('blog_id', $blog->blog_id)->update([
+            'category_id' => $request->category_id,
         ]);
-
-        // Sync the blog's category in the pivot table
-        $blog->categories()->sync([$request->category_id]);
-
-        // Your update code here
-        $after = DB::select("SELECT current_user, session_user");
-
-        //dd($before, $after);
-
 
         return redirect()->route('blogs.show', $blog);
     }
@@ -137,7 +130,7 @@ class BlogController extends Controller
 
     public function destroy(Blog $blog)
     {
-        $blog->delete();
+        DB::table('blogs')->where('blog_id', $blog->blog_id)->delete();
 
         return redirect()->route('blogs.index');
     }

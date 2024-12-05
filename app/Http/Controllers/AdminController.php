@@ -48,19 +48,26 @@ class AdminController extends Controller
 
     public function updateUser(Request $request, User $user)
     {
+        // Validate the incoming request
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'role_id' => 'required|exists:roles,role_id',
         ]);
 
-        $user->update($validated);
+        // Update the user record in the database using DB facade
+        DB::table('users')
+            ->where('user_id', $user->user_id)  // Assuming user_id is the primary key
+            ->update([
+                'name' => $validated['name'],
+                'role_id' => $validated['role_id'],
+            ]);
 
         return redirect()->back()->with('message', 'User updated successfully');
     }
 
     public function deleteUser(User $user)
     {
-        $user->delete();
+        DB::table('users')->where('user_id', $user->user_id)->delete();
         return redirect()->back()->with('message', 'User deleted successfully');
     }
 }
