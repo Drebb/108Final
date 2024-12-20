@@ -13,6 +13,7 @@ class AdminController extends Controller
     public function dashboard()
     {
         $statistics = DB::select('SELECT * FROM blog_statistics')[0];
+
         return Inertia::render('Admin/Dashboard', ['statistics' => $statistics]);
     }
 

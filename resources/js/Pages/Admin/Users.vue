@@ -21,16 +21,7 @@
                                 Dashboard
                                 </Link>
                             </li>
-                            <li>
-                                <Link :href="route('admin.user-functions')" :class="[
-                                    'px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                                    $page.component === 'Admin/UserFunctions'
-                                        ? 'bg-blue-100 text-blue-700'
-                                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                                ]" :aria-current="$page.component === 'Admin/UserFunctions' ? 'page' : undefined">
-                                User Functions
-                                </Link>
-                            </li>
+
                             <li>
                                 <Link :href="route('admin.users')" :class="[
                                     'px-3 py-2 rounded-md text-sm font-medium transition-colors',

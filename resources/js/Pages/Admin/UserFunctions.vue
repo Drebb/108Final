@@ -55,7 +55,9 @@
                         <h3 class="text-lg font-semibold mb-4">Get User Blog Count</h3>
                         <div class="flex items-center">
                             <input v-model="userEmailForCount" type="email" placeholder="User Email"
-                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mr-2">
+                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mr-2"
+                                required maxlength="50" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                title="Please enter a valid email address (e.g., user@example.com)." />
                             <button @click="getUserBlogCount"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Get Count
@@ -68,9 +70,13 @@
                         <h3 class="text-lg font-semibold mb-4">Get Recent User Blogs</h3>
                         <div class="flex items-center">
                             <input v-model="userEmailForBlogs" type="email" placeholder="User Email"
-                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mr-2">
+                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mr-2"
+                                required maxlength="254" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                title="Please enter a valid email address (e.g., user@example.com)." />
+
                             <input v-model="limitForBlogs" type="number" placeholder="Limit"
-                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mr-2">
+                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mr-2"
+                                required min="1" max="100" title="Please enter a limit between 1 and 100." />
                             <button @click="getRecentUserBlogs"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Get Blogs

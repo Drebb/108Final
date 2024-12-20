@@ -12,7 +12,7 @@
                     <form @submit.prevent="submit">
                         <div class="mb-4">
                             <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
-                            <input v-model="form.title" type="text" id="title"
+                            <input v-model="form.title" type="text" id="title" maxlength="20"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         </div>
 
@@ -30,8 +30,9 @@
 
                         <div class="mb-4">
                             <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
-                            <textarea v-model="form.content" id="content" rows="6"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                            <textarea v-model="form.content" id="content" rows="6" maxlength="250"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                placeholder="Enter your content here (max 250 characters)"></textarea>
                         </div>
                         <div class="flex items-center justify-between">
                             <button type="submit"

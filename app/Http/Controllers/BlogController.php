@@ -23,6 +23,7 @@ class BlogController extends Controller
 
         $blogs = $query->latest()->get();
 
+
         return Inertia::render('Blogs/Index', [
             'blogs' => $blogs,
             'user' => Auth::user(),
@@ -33,6 +34,7 @@ class BlogController extends Controller
     public function recent()
     {
         $recentBlogs = DB::select('SELECT * FROM recent_blogs');
+
         return Inertia::render('Blogs/Index', [
             'blogs' => $recentBlogs,
             'user' => Auth::user(),
@@ -51,6 +53,11 @@ class BlogController extends Controller
 
     public function create()
     {
+
+        if (Auth::user()->role_id === 1) {
+            return redirect()->route('dashboard');
+        }
+
         $categories = Category::all();
         return Inertia::render('Blogs/Create', [
             'categories' => $categories,
@@ -89,10 +96,13 @@ class BlogController extends Controller
 
     public function edit(Blog $blog)
     {
+        if (Auth::user()->role_id === 1) {
+            return redirect()->route('dashboard');
+        }
+
         $categories = Category::all();
 
         $blog->load('categories');
-
 
         return Inertia::render('Blogs/Edit', [
             'blog' => $blog,
